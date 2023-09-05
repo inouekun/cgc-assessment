@@ -9,9 +9,10 @@ interface DataStore {
   fetchPosts: () => Promise<void>;
   fetchPost: (id: string) => Promise<Post>;
   fetchComments: (id: string) => Promise<Comment[]>;
+  onDeletePost: (id: number) => void;
 }
 
-export const useDataStore = create<DataStore>((set) => ({
+export const useDataStore = create<DataStore>((set, get) => ({
   posts: [],
   loading: false,
   isError: false,
@@ -54,5 +55,9 @@ export const useDataStore = create<DataStore>((set) => ({
     } finally {
       set(() => ({ loading: false }));
     }
+  },
+  onDeletePost: (id: number) => {
+    const matched = get().posts.filter((post) => post.id !== id);
+    set({ posts: matched });
   }
 }));
